@@ -184,6 +184,9 @@ void disastrOS_start(void (*f)(void*), void* f_args, char* logfile){
   syscall_vector[DSOS_CALL_EXEC]      = internal_exec;      //Syscall personale
   syscall_numarg[DSOS_CALL_EXEC]      = 2;                  //Numero parametri della syscall
 
+  syscall_vector[DSOS_CALL_TERMINATE]     = internal_terminate;      //Syscall personale
+  syscall_numarg[DSOS_CALL_TERMINATE]     = 1;                       //Numero parametri della syscall
+
   // setup the scheduling lists
   running=0;
   List_init(&ready_list);
@@ -259,6 +262,11 @@ void disastrOS_exit(int exitval) {
   disastrOS_syscall(DSOS_CALL_EXIT, exitval);
 }
 
+void disastrOS_terminate(int target_pid){
+  printf("Sono dentro disastrOS_terminate\n");
+  disastrOS_syscall(DSOS_CALL_TERMINATE, target_pid);
+}
+
 void disastrOS_preempt() {
   disastrOS_syscall(DSOS_CALL_PREEMPT);
 }
@@ -267,9 +275,9 @@ void disastrOS_spawn(void (*f)(void*), void* args ) {
   disastrOS_syscall(DSOS_CALL_SPAWN, f, args);
 }
 
-void disastrOS_exec(const char* filename, const char* symbol) {     //Corpo della syscall personale
+int disastrOS_exec(const char* filename, const char* symbol) {     //Corpo della syscall personale
   printf("Sono dentro disastrOS_exec\n");
-  disastrOS_syscall(DSOS_CALL_EXEC, filename, symbol);
+  return disastrOS_syscall(DSOS_CALL_EXEC, filename, symbol);
 }
 
 void disastrOS_shutdown() {

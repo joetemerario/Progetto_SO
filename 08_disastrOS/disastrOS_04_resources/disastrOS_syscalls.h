@@ -25,5 +25,7 @@ void internal_closeResource();
 
 void internal_destroyResource();
 
-//Syscall aggiunta
+//Syscall aggiunte
 void internal_exec();
+
+void internal_terminate();

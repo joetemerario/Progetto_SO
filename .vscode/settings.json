@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "*.ejs": "html",
-        "disastros.h": "c"
+        "disastros.h": "c",
+        "disastros_syscalls.h": "c"
     }
 }

@@ -25,6 +25,7 @@ OBJS=pool_allocator.o\
      disastrOS_exec.o\
      disastrOS_spawn.o\
      disastrOS_exit.o\
+     disastrOS_terminate.o\
      disastrOS_shutdown.o\
      disastrOS_schedule.o\
      disastrOS_preempt.o\

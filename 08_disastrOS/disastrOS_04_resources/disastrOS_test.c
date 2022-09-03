@@ -21,11 +21,24 @@ void childFunction(void* args){
   printf("PID: %d\n", disastrOS_getpid());
 
   const char* shared_obj = "libdisastrOS.so";
-  const char* func_symbol = "polite";
+  const char* func_symbol1 = "polite";
 
-  
-  disastrOS_exec(shared_obj, func_symbol);
+  int pid_ret1;
+  pid_ret1 = disastrOS_exec(shared_obj, func_symbol1);
   alive_children++;
+
+  const char* func_symbol2 = "infinite_count";
+
+  int pid_ret2;
+  pid_ret2 = disastrOS_exec(shared_obj, func_symbol2);
+  alive_children++;
+
+  disastrOS_terminate(pid_ret2); //Grazie a questa chiamata a disastrOS_terminate, il thread viene terminato dal processo figlio
+                                 //ancora prima di far partire l'esecuzione della funzione infinite_count. Per provare
+                                 //commentare la disastrOS_terminate e decommentare la disastrOS_exit nel file
+                                 //disastrOS_polite_function.c
+
+
 
   /* int type=0;
   int mode=0;
@@ -41,9 +54,13 @@ void childFunction(void* args){
   int retval;
   int pid;
 
-  pid=disastrOS_wait(0, &retval);
+  while(alive_children>0 && (pid=disastrOS_wait(0, &retval))>=0){ 
+    --alive_children;
+  }
 
-  --alive_children;
+  /* pid=disastrOS_wait(0, &retval);
+
+  --alive_children; */
 
   disastrOS_exit(disastrOS_getpid()+1);
 }
@@ -96,7 +113,7 @@ int main(int argc, char** argv){
   // we create the init process processes
   // the first is in the running variable
   // the others are in the ready queue
-  printf("the function pointer is: %p", childFunction);
+  printf("the function pointer is: %p\n", childFunction);
   // spawn an init process
   printf("start\n");
   disastrOS_start(initFunction, 0, logfilename);

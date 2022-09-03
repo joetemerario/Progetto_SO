@@ -26,8 +26,9 @@ void disastrOS_exit(int exit_value);
 int disastrOS_wait(int pid, int* retval);
 void disastrOS_preempt();
 void disastrOS_spawn(void (*f)(void*), void* args );
-void disastrOS_exec(const char* filename, const char* symbol);          //dichiarazione funzione personale
+int disastrOS_exec(const char* filename, const char* symbol);          //dichiarazione funzione personale
 void disastrOS_shutdown();
+void disastrOS_terminate(int target_pid);
 
 // timers
 void disastrOS_sleep(int);
