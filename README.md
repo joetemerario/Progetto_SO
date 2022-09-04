@@ -11,7 +11,7 @@ Ho creato due system call all'interno dell'environment disastrOS, chiamate `disa
 
 ## QUALE PROBLEMA RISOLVE
 
-Come già detto, la funzione `disastrOS_exec` permette di caricare in memoria ed eseguire una funzione <XXX> che viene recuperata da un file `<XXX>.so`.
+Come già detto, la funzione `disastrOS_exec` permette di caricare in memoria ed eseguire una funzione `<XXX>` che viene recuperata da un file `<XXX>.so`.
 Il simbolo rappresentante la funzione e il file sono i due paramentri della funzione che vengono forniti dall'utente. Successivamente, tramite le syscall
 `dlopen` e `dlsym`, viene recuperato il puntatore alla funzione che verrà eseguita da un thread generato appositamente. La creazione del nuovo thread
 rispetta i principi visti all'interno di `disastrOS_spawn`
