@@ -10,12 +10,15 @@
 void internal_exec()
 {
     printf("Sono dentro internal_exec\n");
+
     void *handle;
     void (*func)(void *);
     char *error;
 
     const char *shared_obj = (const char *)running->syscall_args[0];
     handle = dlopen(shared_obj, RTLD_LAZY);
+
+    printf("Shared Object da aprire: %s\n", shared_obj);
 
     if (!handle)
     {
@@ -28,6 +31,8 @@ void internal_exec()
     const char *func_symbol = (const char *)running->syscall_args[1];
     func = (void (*)(void *))dlsym(handle, func_symbol);
 
+    printf("Simbolo della funzione da eseguire: %s\nIndirizzo della funzione all'interno della memoria: %p\n", func_symbol, func);
+
     error = dlerror();
 
     if (error)
@@ -35,8 +40,6 @@ void internal_exec()
         printf("%s\n", error);
         exit(EXIT_FAILURE);
     }
-
-    printf("Sto per usare il corpo di internal_spawn da dentro internal_exec\n");
 
     static PCB *new_pcb;
     new_pcb = PCB_alloc();
@@ -71,6 +74,4 @@ void internal_exec()
     new_pcb->cpu_state.uc_link = &main_context;
     
     makecontext(&new_pcb->cpu_state, (void(*)()) func, 1, 0);
-
-    printf("Ho finito internal_exec\n");
 }

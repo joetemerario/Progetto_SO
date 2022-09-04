@@ -9,6 +9,7 @@ int alive_children=0;
 // we need this to handle the sleep state
 void sleeperFunction(void* args){
   printf("Hello, I am the sleeper, and I sleep %d\n",disastrOS_getpid());
+  
   while(1) {
     getc(stdin);
     disastrOS_printStatus();
@@ -17,15 +18,18 @@ void sleeperFunction(void* args){
 
 void childFunction(void* args){
   printf("Hello, I am the child function %d\n",disastrOS_getpid());
-  //printf("I will iterate a bit, before terminating\n");
+
   printf("PID: %d\n", disastrOS_getpid());
+
+  printf("**********************************TEST disastrOS_exec()**********************************\n");
 
   const char* shared_obj = "libdisastrOS.so";
   const char* func_symbol1 = "polite";
 
-  int pid_ret1;
-  pid_ret1 = disastrOS_exec(shared_obj, func_symbol1);
+  disastrOS_exec(shared_obj, func_symbol1);
   alive_children++;
+
+  printf("**********************************TEST disastrOS_terminate()**********************************\n");
 
   const char* func_symbol2 = "infinite_count";
 
@@ -38,29 +42,12 @@ void childFunction(void* args){
                                  //commentare la disastrOS_terminate e decommentare la disastrOS_exit nel file
                                  //disastrOS_polite_function.c
 
-
-
-  /* int type=0;
-  int mode=0;
-  int fd=disastrOS_openResource(disastrOS_getpid(),type,mode);
-  printf("fd=%d\n", fd);
-  printf("PID: %d, terminating\n", disastrOS_getpid());
-
-  for (int i=0; i<(disastrOS_getpid()+1); ++i){
-    printf("PID: %d, iterate %d\n", disastrOS_getpid(), i);
-    disastrOS_sleep((20-disastrOS_getpid())*5);
-  } */
-
   int retval;
   int pid;
 
   while(alive_children>0 && (pid=disastrOS_wait(0, &retval))>=0){ 
     --alive_children;
   }
-
-  /* pid=disastrOS_wait(0, &retval);
-
-  --alive_children; */
 
   disastrOS_exit(disastrOS_getpid()+1);
 }
@@ -74,21 +61,9 @@ void initFunction(void* args) {
   disastrOS_spawn(sleeperFunction, 0);
 
   printf("I feel like to spawn 1 nice thread\n");
-  /* int alive_children=0; */
 
   disastrOS_spawn(childFunction, 0);
   alive_children++;
-
-  /* for (int i=0; i<10; ++i) {
-    int type=0;
-    int mode=DSOS_CREATE;
-    printf("mode: %d\n", mode);
-    printf("opening resource (and creating if necessary)\n");
-    int fd=disastrOS_openResource(i,type,mode);
-    printf("fd=%d\n", fd);
-    disastrOS_spawn(childFunction, 0);
-    alive_children++;
-  } */
 
   disastrOS_printStatus();
 
@@ -107,15 +82,20 @@ void initFunction(void* args) {
 
 int main(int argc, char** argv){
   char* logfilename=0;
+
   if (argc>1) {
     logfilename=argv[1];
   }
+
   // we create the init process processes
   // the first is in the running variable
   // the others are in the ready queue
   printf("the function pointer is: %p\n", childFunction);
+
   // spawn an init process
   printf("start\n");
+
   disastrOS_start(initFunction, 0, logfilename);
+
   return 0;
 }

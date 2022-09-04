@@ -3,6 +3,8 @@
 #include <stdio.h>
 
 void polite(void* args) {
+    printf("******L'esecuzione della funzione potrebbe essere successiva alla terminazione della funzione disastrOS_exec()******\n");
+
     for (int i = 0; i < 50; i++)
     {
         printf("Hello, this function was called by a thread created with a syscall. Iteration: %d\n", i);
@@ -12,6 +14,7 @@ void polite(void* args) {
 }
 
 void infinite_count(void* args) {
+    printf("******Se leggi questo print vuol dire che la disastrOS_terminate() non è in funzione******\n");
 
     for (int i = 0; i < 5000; i++)
     {
