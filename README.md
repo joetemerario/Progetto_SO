@@ -1,5 +1,8 @@
 # OPEN PROCESS
 
+Per la creazione di questo progetto ho sfruttato come base la distribuzione di **disastrOS** messa a disposizione dal professore sul suo repository, modificato a dovere il **makefile**
+e aggiunto i file utili alla creazione delle system call da implementare
+
 ## COSA HO FATTO
 
 Ho creato due system call all'interno dell'environment disastrOS, chiamate `disastrOS_exec` e `disastrOS_terminate`, che si occupano rispettivamente di:
